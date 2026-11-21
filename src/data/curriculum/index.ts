@@ -7,6 +7,7 @@ import { STAGE04 } from './stage04'
 import { STAGE05 } from './stage05'
 import { STAGE06 } from './stage06'
 import { STAGE07 } from './stage07'
+import { STAGE08 } from './stage08'
 import { STAGE09 } from './stage09'
 import { STAGE10 } from './stage10'
 import { STAGE12 } from './stage12'
@@ -20,6 +21,7 @@ export const LESSONS: Lesson[] = [
   ...STAGE05,
   ...STAGE06,
   ...STAGE07,
+  ...STAGE08,
   ...STAGE09,
   ...STAGE10,
   ...STAGE12,

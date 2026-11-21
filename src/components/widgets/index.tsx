@@ -10,6 +10,7 @@ import { W04 } from './stage04'
 import { W05 } from './stage05'
 import { W06 } from './stage06'
 import { W07 } from './stage07'
+import { W08 } from './stage08'
 import { W09 } from './stage09'
 import { W10 } from './stage10'
 import { W12 } from './stage12'
@@ -22,6 +23,7 @@ const EXTRA: WidgetMap = {
   ...W05,
   ...W06,
   ...W07,
+  ...W08,
   ...W09,
   ...W10,
   ...W12,
