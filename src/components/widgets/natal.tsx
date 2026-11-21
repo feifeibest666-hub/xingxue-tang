@@ -6,11 +6,13 @@ import { GlyphAt } from '../Glyph'
 import { PLACES } from './tools'
 import { CASES, caseById } from '../../data/cases'
 import { HOUSE_TOPICS, PLANET, type Planet, dignityOf, JOY } from '../../data/classical'
+import { fmtLon } from '../../data/zodiac'
 import { type Birth, type Body, type Chart, type HouseSystem, BODIES, BODY_COLOR, BODY_NAME, BODY_SHORT, CLASSICAL, HOUSE_SYSTEM_NAME, aspects, computeChart, cusps, houseOf, norm, sep, signIdx, signRuler, wholeHouse } from '../../lib/natal'
 import { setNote, useStore } from '../../lib/store'
 
 export const SIGN_CN = ['白羊', '金牛', '双子', '巨蟹', '狮子', '处女', '天秤', '天蝎', '射手', '摩羯', '水瓶', '双鱼']
-export const fmtL = (l: number) => { const x = norm(l); const d = x % 30; return `${SIGN_CN[Math.floor(x / 30)]} ${Math.floor(d)}°${String(Math.floor((d % 1) * 60)).padStart(2, '0')}′` }
+/** 与 fmtLon / chartFacts 相同：分四舍五入，满 60′ 进位到度。 */
+export const fmtL = (l: number) => fmtLon(l)
 const D = Math.PI / 180
 
 /* ───────── 出生资料来源：案例或"我的盘" ───────── */
