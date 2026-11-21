@@ -12,6 +12,7 @@ import { W06 } from './stage06'
 import { W07 } from './stage07'
 import { W12 } from './stage12'
 import { W16 } from './stage16'
+import { W17 } from './stage17'
 
 const EXTRA: WidgetMap = {
   ...W02,
@@ -22,6 +23,7 @@ const EXTRA: WidgetMap = {
   ...W07,
   ...W12,
   ...W16,
+  ...W17,
 }
 
 /** 课程里的互动屏按名字取部件 */
