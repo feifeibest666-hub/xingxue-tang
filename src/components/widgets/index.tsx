@@ -1,0 +1,41 @@
+import type { ReactNode } from 'react'
+import { DiurnalWidget, FlashlightWidget, HemiWidget, OrbitWidget, SphereWidget, SwingWidget, TiltWidget, TwoCirclesWidget } from './sky'
+import { CakeWidget, MoonYearWidget, PrecessionWidget, RingWidget, SignsVsConstWidget } from './circle'
+import { CalcWidget, CrossesWidget, DoorWidget, ElementsWidget, GearsWidget, GlyphsWidget, MirrorWidget, SpeedWidget, WebWidget, ZipperWidget } from './signs'
+import { SeasonsWidget, SkySimWidget, SunDateWidget } from './tools'
+
+/** 课程里的互动屏按名字取部件 */
+export function Widget({ name, args = {} }: { name: string; args?: Record<string, unknown> }): ReactNode {
+  switch (name) {
+    case 'sphere': return <SphereWidget />
+    case 'diurnal': return <DiurnalWidget />
+    case 'orbit': return <OrbitWidget close={Boolean(args.close)} />
+    case 'twoCircles': return <TwoCirclesWidget seasons={Boolean(args.seasons)} />
+    case 'tilt': return <TiltWidget />
+    case 'flashlight': return <FlashlightWidget />
+    case 'swing': return <SwingWidget />
+    case 'hemi': return <HemiWidget />
+    case 'ring': return <RingWidget terms={Boolean(args.terms)} />
+    case 'moonYear': return <MoonYearWidget />
+    case 'cake': return <CakeWidget />
+    case 'signsVsConst': return <SignsVsConstWidget />
+    case 'precession': return <PrecessionWidget />
+    case 'zipper': return <ZipperWidget />
+    case 'elements': return <ElementsWidget triangles={Boolean(args.triangles)} />
+    case 'crosses': return <CrossesWidget />
+    case 'door': return <DoorWidget />
+    case 'gears': return <GearsWidget />
+    case 'glyphs': return <GlyphsWidget signs={(args.signs as number[]) ?? [1, 2]} />
+    case 'web': return <WebWidget />
+    case 'mirror': return <MirrorWidget />
+    case 'calc': return <CalcWidget />
+    case 'speed': return <SpeedWidget />
+    case 'seasons': return <SeasonsWidget />
+    case 'sunDate': return <SunDateWidget mode={(args.mode as 'basic' | 'sidereal' | 'attrs') ?? 'basic'} />
+    case 'sim': return <SkySimWidget />
+    default: return <div className="soon">（互动"{name}"还没做好）</div>
+  }
+}
+
+export const WIDGET_NAMES = ['sphere', 'diurnal', 'orbit', 'twoCircles', 'tilt', 'flashlight', 'swing', 'hemi', 'ring', 'moonYear', 'cake', 'signsVsConst', 'precession',
+  'zipper', 'elements', 'crosses', 'door', 'gears', 'glyphs', 'web', 'mirror', 'calc', 'speed', 'seasons', 'sunDate', 'sim']
