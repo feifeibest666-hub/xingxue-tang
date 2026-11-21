@@ -17,6 +17,7 @@ export const BUILT: Record<number, StageEntry> = {
   8: { lessons: () => import('./stage08').then((m) => m.STAGE08), widgets: () => import('../../components/widgets/stage08').then((m) => m.W08) },
   9: { lessons: () => import('./stage09').then((m) => m.STAGE09), widgets: () => import('../../components/widgets/stage09').then((m) => m.W09) },
   10: { lessons: () => import('./stage10').then((m) => m.STAGE10), widgets: () => import('../../components/widgets/stage10').then((m) => m.W10) },
+  11: { lessons: () => import('./stage11').then((m) => m.STAGE11), widgets: () => import('../../components/widgets/stage11').then((m) => m.W11) },
   12: { lessons: () => import('./stage12').then((m) => m.STAGE12), widgets: () => import('../../components/widgets/stage12').then((m) => m.W12) },
   13: { lessons: () => import('./stage13').then((m) => m.STAGE13), widgets: () => import('../../components/widgets/stage13').then((m) => m.W13) },
   14: { lessons: () => import('./stage14').then((m) => m.STAGE14), widgets: () => import('../../components/widgets/stage14').then((m) => m.W14) },
