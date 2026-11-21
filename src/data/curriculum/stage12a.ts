@@ -1,7 +1,7 @@
 import type { Lesson } from '../types'
-import { C, COVER, EXPLAIN, LS, ORDER, SORT, STEPS, CALC, T, TF, W, analogy, connect, debate, derive, hook, qa, quote, summary, tasks, write, yi } from './build'
+import { C, EXPLAIN, LS, ORDER, SORT, STEPS, CALC, T, TF, W, analogy, connect, debate, derive, hook, qa, quote, summary, tasks, write, yi } from './build'
 
-export const L12 = LS(12, (d) => COVER[Math.floor((d - 477) / 7) % COVER.length])
+export const L12 = LS(12, 's12-cover')
 
 /** 阶段 12 · 第 1–3 周：卜卦的前提、代表星、考量、完成与阻碍、时间与失物 */
 export const S12_W1_3: Lesson[] = [
