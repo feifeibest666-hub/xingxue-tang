@@ -16,6 +16,7 @@ import { W10 } from './stage10'
 import { W12 } from './stage12'
 import { W13 } from './stage13'
 import { W14 } from './stage14'
+import { W15 } from './stage15'
 import { W16 } from './stage16'
 
 const EXTRA: WidgetMap = {
@@ -31,6 +32,7 @@ const EXTRA: WidgetMap = {
   ...W12,
   ...W13,
   ...W14,
+  ...W15,
   ...W16,
 }
 
