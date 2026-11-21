@@ -1,6 +1,7 @@
 // 真实星盘计算（第 5 阶段起共用）。没有 React、没有导入时副作用；astronomy-engine 在函数内部按需加载。
 import { loadAstro } from './astro'
 import { ASPECTS, DOMICILE, type Planet, dignityOf } from '../data/classical'
+import { fmtLon } from '../data/zodiac'
 
 type AE = Awaited<ReturnType<typeof loadAstro>>
 const rad = Math.PI / 180
@@ -205,7 +206,7 @@ export function aspects(pos: Record<Body, Pos>, bodies: Body[] = CLASSICAL, extr
 export function chartFacts(c: Chart, sys: HouseSystem = 'whole') {
   const cs = cusps(c, sys) ?? cusps(c, 'whole')!
   const signName = (l: number) => ['白羊', '金牛', '双子', '巨蟹', '狮子', '处女', '天秤', '天蝎', '射手', '摩羯', '水瓶', '双鱼'][signIdx(l) - 1]
-  const deg = (l: number) => `${signName(l)} ${Math.floor(norm(l) % 30)}°${String(Math.floor(((norm(l) % 30) % 1) * 60)).padStart(2, '0')}′`
+  const deg = (l: number) => fmtLon(l)
   const ascLord = signRuler(signIdx(c.asc))
   const rows = BODIES.map((b) => {
     const p = c.pos[b]
