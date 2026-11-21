@@ -93,5 +93,26 @@ if (Math.abs(eq0 - 6) > 0.1) err(`赤道上白羊到双子上升时间合计应�
 if (Math.abs(ayanamsaAt(2026) - 24.21) > 0.1) err(`2026 年岁差值应约 24.2°，得到 ${ayanamsaAt(2026)}`)
 ok(`天文：2000-01-01 太阳 ${lon2000.toFixed(2)}°；白羊上升 ${aries.toFixed(2)}h、天秤 ${libra.toFixed(2)}h`)
 
+// 5. 星盘与时间技术（src/lib/natal.ts、timing.ts）：爱因斯坦 1879-03-14 11:30 LMT 乌尔姆，对照常用软件的结果
+{
+  const { computeChart, cusps } = await import('../src/lib/natal')
+  const T = await import('../src/lib/timing')
+  const c = await computeChart({ date: '1879-03-14', time: '11:30', tz: 10 / 15, lat: 48.4, lon: 10.0 })
+  const near = (a: number, b: number, tol: number, what: string) => { const d = Math.abs(((a - b + 540) % 360) - 180); if (d > tol) err(`${what} 应约 ${b}，得到 ${a.toFixed(2)}`) }
+  near(c.asc, 101.63, 0.1, '爱因斯坦上升'); near(c.mc, 342.83, 0.1, '爱因斯坦天顶')
+  near(c.pos.sun.lon, 353.5, 0.05, '爱因斯坦太阳'); near(c.pos.moon.lon, 254.52, 0.1, '爱因斯坦月亮')
+  if (!c.isDay) err('爱因斯坦应为日生盘')
+  if (cusps({ ...c, lat: 70 }, 'placidus') !== null) err('普拉西度在北纬 70° 应无解')
+  const f = T.firdaria(true)
+  if (f.reduce((n, p) => n + (p.to - p.from), 0) !== 75 || f[2].lord !== 'mercury') err('法达总数应为 75 年，日盘第 3 段为水星')
+  if (T.ZR_SIGN_YEARS.reduce((a, b) => a + b, 0) !== 211 || T.ZR_SIGN_YEARS[9] !== 27) err('黄道释放星座年数合计应为 211、摩羯 27')
+  const zr = T.zodiacalReleasing(10, 360 * 27, 2).filter((p) => p.level === 2)
+  if (zr[12]?.sign !== 4 || !zr[12]?.lb) err('摩羯 L1 内第 13 个 L2 应松绑跳到巨蟹')
+  if (T.profection(4, 26).sign !== 6) err('巨蟹上升 26 岁小限应到处女')
+  const sat = await T.returnsOf(c, 'saturn', 32)
+  if (!sat.length || Math.abs(T.ageAt(c.ut, sat[0]) - 29.1) > 0.5) err('爱因斯坦第一次土星回归应约 29 岁')
+  ok(`星盘：爱因斯坦上升 ${c.asc.toFixed(2)}°、天顶 ${c.mc.toFixed(2)}°；法达、释放、小限、土星回归`)
+}
+
 if (fail) { console.error(`\n${fail} 项未通过`); process.exit(1) }
 console.log('\n全部通过')
