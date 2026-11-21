@@ -15,6 +15,7 @@ import { STAGE13 } from './stage13'
 import { STAGE14 } from './stage14'
 import { STAGE15 } from './stage15'
 import { STAGE16 } from './stage16'
+import { STAGE17 } from './stage17'
 
 /** 已经写好完整内容的课 */
 export const LESSONS: Lesson[] = [
@@ -33,6 +34,7 @@ export const LESSONS: Lesson[] = [
   ...STAGE14,
   ...STAGE15,
   ...STAGE16,
+  ...STAGE17,
 ]
 const byDay = new Map(LESSONS.map((l) => [l.day, l]))
 
