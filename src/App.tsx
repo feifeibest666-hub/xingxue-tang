@@ -13,9 +13,25 @@ import { isOnboarded, useStore } from './lib/store'
 const useHash = () => {
   const [h, setH] = useState(() => window.location.hash.slice(1) || '/today')
   useEffect(() => {
-    const f = () => { setH(window.location.hash.slice(1) || '/today'); window.scrollTo(0, 0) }
-    window.addEventListener('hashchange', f)
-    return () => window.removeEventListener('hashchange', f)
+    const read = () => { setH(window.location.hash.slice(1) || '/today'); window.scrollTo(0, 0) }
+    // 结果页的「继续」是 #/lesson/N 这种链接。iOS Safari 在带 transform / filter 的层里
+    // 会改地址但不发 hashchange，页面就停在原地。点击时自己同步一次。
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      const a = (e.target as Element | null)?.closest?.('a[href^="#"]') as HTMLAnchorElement | null
+      if (!a) return
+      const href = a.getAttribute('href')
+      if (!href || href === '#') return
+      e.preventDefault()
+      if (window.location.hash !== href) window.location.hash = href
+      read()
+    }
+    window.addEventListener('hashchange', read)
+    document.addEventListener('click', onClick)
+    return () => {
+      window.removeEventListener('hashchange', read)
+      document.removeEventListener('click', onClick)
+    }
   }, [])
   return h
 }
@@ -57,9 +73,9 @@ export default function App() {
           <motion.main
             key={showWelcome ? 'welcome' : path}
             className={`main ${immersive ? 'immersive' : ''}`}
-            initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -8, filter: 'blur(3px)' }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3, ease: [0.22, 0.7, 0.3, 1] }}
           >
             {page}

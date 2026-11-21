@@ -105,9 +105,11 @@ input[type='range']:focus { box-shadow: none; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 18px; border-radius: 999px;
   border: 1px solid var(--line-strong); background: var(--surface); font-size: 15px; letter-spacing: 0.06em; transition: transform 0.15s, background 0.2s, opacity 0.2s;
-  -webkit-user-select: none; user-select: none; white-space: nowrap;
+  -webkit-user-select: none; user-select: none; white-space: nowrap; cursor: pointer; touch-action: manipulation;
 }
 .btn:active { transform: scale(0.97); }
+/* iOS Safari 会在 :active 的 transform 上取消 <a> 的跳转，按钮不受影响 */
+a.btn:active { transform: none; }
 .btn.primary { background: var(--ink); color: var(--star); border-color: var(--ink); box-shadow: 0 8px 20px -10px rgba(20, 20, 40, 0.6); }
 .btn.gold { background: var(--gold); color: var(--night); border-color: var(--gold); font-weight: 600; }
 .btn.ghost { background: transparent; }
@@ -396,8 +398,8 @@ input[type='range']:focus { box-shadow: none; }
 .result-score { font-family: var(--serif); }
 .result-score b { font-size: 56px; color: var(--ink); }
 .result-score span { font-size: 22px; color: var(--ink-soft); }
-.light-zone { position: relative; height: 200px; display: grid; place-items: start center; margin: 6px 0 4px; }
-.light-zone svg { overflow: visible; }
+.light-zone { position: relative; height: 200px; display: grid; place-items: start center; margin: 6px 0 4px; overflow: hidden; }
+.light-zone svg { overflow: visible; pointer-events: none; }
 
 /* ───────── 互动部件（夜空表面） ───────── */
 .wg { background: var(--night); color: var(--star); border-radius: var(--r-lg); padding: 14px 14px 12px; margin: 10px 0 4px; box-shadow: var(--shadow-2); position: relative; overflow: hidden; }
