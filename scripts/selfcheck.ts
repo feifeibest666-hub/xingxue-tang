@@ -6,6 +6,7 @@ import { WIDGET_NAMES } from '../src/components/widgets'
 import { TAGS } from '../src/data/types'
 import { ascensionTime, sunLongitude, ayanamsaAt } from '../src/lib/astro'
 import { element, modality, polarity, signOf } from '../src/data/zodiac'
+import { boundAt, faceAt, dignityOf, detrimentOf, fallOf } from '../src/data/classical'
 
 let fail = 0
 const err = (m: string) => { fail++; console.error('✗', m) }
@@ -76,7 +77,9 @@ want.forEach(([p, e, m], k) => {
   if (polarity(i) !== p || element(i) !== e || modality(i) !== m) err(`第 ${i} 宫属性公式错误`)
 })
 if (signOf(359.9).sign.name !== '双鱼' || signOf(0).sign.name !== '白羊' || signOf(-1).sign.name !== '双鱼') err('signOf 边界错误')
-ok('星座属性公式')
+if (boundAt(0) !== 'jupiter' || boundAt(359.5) !== 'saturn' || faceAt(0) !== 'mars' || faceAt(355) !== 'mars' || faceAt(10) !== 'sun') err('界/外观表错误')
+if (detrimentOf('mars').join() !== '7,2' || fallOf('sun') !== 7 || dignityOf('sun', 139, true)[0]?.name !== '入庙') err('尊贵表错误')
+ok('星座属性公式、古典尊贵表')
 
 // 4. 天文回归测试
 const lon2000 = await sunLongitude(new Date(Date.UTC(2000, 0, 1, 12)))
