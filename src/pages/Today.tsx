@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import { DAILY_REVIEW_CAP, dueCards, scheduleInfo, streak, todayStr, useStore } from '../lib/store'
-import { isBuilt, lessonByDay, outlineByDay, stageOf } from '../data/curriculum'
+import { isBuilt, outlineByDay, stageOf, useLesson } from '../data/curriculum'
 import { KIND_LABEL } from '../data/types'
 import { COVER } from '../data/curriculum/build'
 import { fmtDeg, signOf, termAt } from '../data/zodiac'
@@ -37,7 +37,9 @@ export function TodayPage() {
   const s = useStore()
   const info = scheduleInfo(s)
   const next = info.next ?? 700
-  const lesson = lessonByDay(next)
+  const loaded = useLesson(next)
+  const loading = loaded === undefined
+  const lesson = loaded ?? null
   const ol = outlineByDay(next)!
   const st = stageOf(next)
   const due = Math.min(dueCards(s).length, DAILY_REVIEW_CAP)
@@ -65,9 +67,9 @@ export function TodayPage() {
         <div className="lc-body">
           <div className="lc-kicker"><span>第 {next} 天 · 第 {st.n} 阶段 {st.name}</span><span className="lc-kind">{KIND_LABEL[ol.kind]}</span></div>
           <h2>{ol.title}</h2>
-          <p>{lesson ? lesson.question : `这一课还在制作中：${ol.goal || st.goal}`}</p>
+          <p>{loading ? '正在打开…' : lesson ? lesson.question : `这一课还在制作中：${ol.goal || st.goal}`}</p>
           <div className="lc-go">
-            <span className="small" style={{ color: 'rgba(246,241,228,.6)' }}>{lesson ? `约 ${lesson.minutes ?? 20} 分钟 · ${lesson.screens.length} 屏 · ${lesson.quiz.length} 道题` : '即将上线'}</span>
+            <span className="small" style={{ color: 'rgba(246,241,228,.6)' }}>{lesson ? `约 ${lesson.minutes ?? 20} 分钟 · ${lesson.screens.length} 屏 · ${lesson.quiz.length} 道题` : loading ? '正在载入…' : '即将上线'}</span>
             <span className="btn sm">{isBuilt(next) ? (doneToday ? '再学一课' : '开始') : '看看'} ›</span>
           </div>
         </div>

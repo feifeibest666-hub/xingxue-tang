@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { QA_ALL, lessonByDay } from '../data/curriculum'
+import { peekLesson, qaOf, useLessons } from '../data/curriculum'
 import { TAGS, type Tag } from '../data/types'
 import { addMyQ, removeMyQ, toggleMyQ, useStore } from '../lib/store'
 import { inline } from '../components/Rich'
@@ -13,12 +13,14 @@ export function QAPage() {
   const [text, setText] = useState('')
   const [day, setDay] = useState('')
   const [toast, setToast] = useState('')
+  const { lessons, ready } = useLessons()
+  const QA_ALL = useMemo(() => qaOf(lessons), [lessons])
   const list = useMemo(() => {
     const k = kw.trim()
     return QA_ALL.filter((q) => (!tag || q.tag === tag) && (!k || q.q.includes(k) || q.a.includes(k) || q.lessonTitle.includes(k)))
-  }, [kw, tag])
+  }, [kw, tag, QA_ALL])
   const copy = (t: string, d?: number) => {
-    const l = d ? lessonByDay(d) : undefined
+    const l = d ? peekLesson(d) : undefined
     const ctx = l ? `\n\n背景：我在学「星学堂」第 ${l.day} 天「${l.title}」。本课问题：${l.question}` : ''
     navigator.clipboard?.writeText(`${t}${ctx}\n请用初学者能懂的话解释，并说明哪些是天文事实、哪些是传统约定。`).then(() => { setToast('已复制，可以粘贴给老师或 AI'); setTimeout(() => setToast(''), 1800) })
   }
@@ -35,13 +37,13 @@ export function QAPage() {
         <>
           <div className="search">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
-            <input value={kw} onChange={(e) => { setKw(e.target.value); setLimit(30) }} placeholder={`搜 ${QA_ALL.length} 条问答，比如"岁差""水瓶"`} />
+            <input value={kw} onChange={(e) => { setKw(e.target.value); setLimit(30) }} placeholder={ready ? `搜 ${QA_ALL.length} 条问答，比如"岁差""水瓶"` : '正在载入问答…'} />
           </div>
           <div className="chips" style={{ marginBottom: 6 }}>
             <button className={`chip ${!tag ? 'on' : ''}`} onClick={() => setTag(null)}>全部</button>
             {TAGS.map((t) => <button key={t} className={`chip ${tag === t ? 'on' : ''}`} onClick={() => setTag(tag === t ? null : t)}>{t}</button>)}
           </div>
-          <p className="muted small">找到 {list.length} 条</p>
+          <p className="muted small">{ready ? `找到 ${list.length} 条` : '正在载入问答…'}</p>
           {list.slice(0, limit).map((q) => (
             <div key={q.id} className="qa-item">
               <h3>{q.q}</h3>

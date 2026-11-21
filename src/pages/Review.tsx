@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 import { DAILY_REVIEW_CAP, INTERVALS, clearWrong, dueCards, getState, reviewCard, useStore } from '../lib/store'
-import { cardById, lessonByDay } from '../data/curriculum'
+import { cardById, dayOfCard, peekLesson, useLessons } from '../data/curriculum'
 import { inline } from '../components/Rich'
 import { ChoiceView } from './Lesson'
 import { StarShape } from '../components/Glyph'
@@ -9,7 +9,8 @@ import { StarShape } from '../components/Glyph'
 export function ReviewPage({ mode }: { mode?: string }) {
   const s = useStore()
   const due = dueCards(s).slice(0, DAILY_REVIEW_CAP)
-  if (mode === 'go' && due.length) return <Session ids={due} />
+  const { ready } = useLessons([...due.map(dayOfCard), ...Object.values(s.wrong).map((w) => w.day)])
+  if (mode === 'go' && due.length) return ready ? <Session ids={due} /> : <div className="pad"><p className="muted">正在取出今天的卡…</p></div>
   const boxes = INTERVALS.map((_, b) => Object.values(s.cards).filter((c) => c.box === b).length)
   const maxBox = Math.max(1, ...boxes)
   const wrong = Object.entries(s.wrong).sort((a, b) => b[1].last.localeCompare(a[1].last))
@@ -42,10 +43,10 @@ export function ReviewPage({ mode }: { mode?: string }) {
       )}
 
       <h3 className="section-title">错题本 <small>{wrong.length} 道</small></h3>
-      {wrong.length === 0 ? <div className="empty">还没有错题。答错的题会自动收进来。</div> : (
+      {wrong.length === 0 ? <div className="empty">还没有错题。答错的题会自动收进来。</div> : !ready ? <p className="muted small">正在载入错题…</p> : (
         <div className="card">
           {wrong.map(([k, w]) => {
-            const l = lessonByDay(w.day)
+            const l = peekLesson(w.day)
             const q = l?.quiz[w.idx]
             if (!l || !q) return null
             return (

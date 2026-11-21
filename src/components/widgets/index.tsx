@@ -3,40 +3,9 @@ import { DiurnalWidget, FlashlightWidget, HemiWidget, OrbitWidget, SphereWidget,
 import { CakeWidget, MoonYearWidget, PrecessionWidget, RingWidget, SignsVsConstWidget } from './circle'
 import { CalcWidget, CrossesWidget, DoorWidget, ElementsWidget, GearsWidget, GlyphsWidget, MirrorWidget, SpeedWidget, WebWidget, ZipperWidget } from './signs'
 import { SeasonsWidget, SkySimWidget, SunDateWidget } from './tools'
-import type { WidgetMap } from './common'
-import { W02 } from './stage02'
-import { W03 } from './stage03'
-import { W04 } from './stage04'
-import { W05 } from './stage05'
-import { W06 } from './stage06'
-import { W07 } from './stage07'
-import { W08 } from './stage08'
-import { W09 } from './stage09'
-import { W10 } from './stage10'
-import { W12 } from './stage12'
-import { W13 } from './stage13'
-import { W14 } from './stage14'
-import { W15 } from './stage15'
-import { W16 } from './stage16'
-import { W17 } from './stage17'
-
-const EXTRA: WidgetMap = {
-  ...W02,
-  ...W03,
-  ...W04,
-  ...W05,
-  ...W06,
-  ...W07,
-  ...W08,
-  ...W09,
-  ...W10,
-  ...W12,
-  ...W13,
-  ...W14,
-  ...W15,
-  ...W16,
-  ...W17,
-}
+import { useEffect, useState } from 'react'
+import { EXTRA } from './extra'
+import { loadAllWidgets } from '../../data/curriculum'
 
 /** 课程里的互动屏按名字取部件 */
 export function Widget({ name, args = {} }: { name: string; args?: Record<string, unknown> }): ReactNode {
@@ -67,10 +36,18 @@ export function Widget({ name, args = {} }: { name: string; args?: Record<string
     case 'seasons': return <SeasonsWidget />
     case 'sunDate': return <SunDateWidget mode={(args.mode as 'basic' | 'sidereal' | 'attrs') ?? 'basic'} />
     case 'sim': return <SkySimWidget />
-    default: if (EXTRA[name]) return EXTRA[name](args)
-      return <div className="soon">（互动"{name}"还没做好）</div>
+    default: return EXTRA[name] ? EXTRA[name](args) : <LazyWidget name={name} args={args} />
   }
 }
 
+function LazyWidget({ name, args }: { name: string; args: Record<string, unknown> }) {
+  const [done, setDone] = useState(false)
+  useEffect(() => { loadAllWidgets().then(() => setDone(true)) }, [])
+  if (EXTRA[name]) return EXTRA[name](args)
+  return <div className="soon">{done ? `（互动"${name}"还没做好）` : '正在载入互动…'}</div>
+}
+
 export const WIDGET_NAMES = ['sphere', 'diurnal', 'orbit', 'twoCircles', 'tilt', 'flashlight', 'swing', 'hemi', 'ring', 'moonYear', 'cake', 'signsVsConst', 'precession',
-  'zipper', 'elements', 'crosses', 'door', 'gears', 'glyphs', 'web', 'mirror', 'calc', 'speed', 'seasons', 'sunDate', 'sim', ...Object.keys(EXTRA)]
+  'zipper', 'elements', 'crosses', 'door', 'gears', 'glyphs', 'web', 'mirror', 'calc', 'speed', 'seasons', 'sunDate', 'sim']
+/** 内置的第一阶段部件，加上已经按需注册进来的部件 */
+export const allWidgetNames = () => [...WIDGET_NAMES, ...Object.keys(EXTRA)]

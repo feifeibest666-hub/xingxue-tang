@@ -10,6 +10,7 @@ import { FLORD_NAME, ageAt, firdaria, fmtDate, monthlyProfection, profection, so
 import { seasons } from '../../lib/astro'
 import { CasePicker, MyBirthForm, NeedMine, useChartOf } from './natal'
 import { moonNext } from './stage12'
+import { loadAll, qaOf } from '../../data/curriculum'
 
 const GOLD = '#c2a05a'
 const DIM = 'rgba(246,241,228,0.55)'
@@ -342,10 +343,10 @@ function DefenseWidget({ n = 10 }: { n?: number }) {
   useEffect(() => {
     let alive = true
     setReady(false)
-    void import('../../data/curriculum').then((m) => {
+    void (async () => {
+      const lessons = await loadAll()
+      const qa = qaOf(lessons)
       if (!alive) return
-      const lessons = Array.isArray(m.LESSONS) ? m.LESSONS : []
-      const qa = Array.isArray(m.QA_ALL) ? m.QA_ALL : []
       const pool: Drill[] = []
       for (const l of lessons) {
         for (const q of l.quiz ?? []) {
@@ -365,7 +366,7 @@ function DefenseWidget({ n = 10 }: { n?: number }) {
       setShow(false)
       setRound(take.map(() => null))
       setReady(true)
-    }).catch(() => { if (alive) { setItems([]); setReady(true) } })
+    })().catch(() => { if (alive) { setItems([]); setReady(true) } })
     return () => { alive = false }
   }, [draw, n])
 

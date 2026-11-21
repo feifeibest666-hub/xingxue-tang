@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import type { Lesson, Quiz, Screen } from '../data/types'
 import { KIND_LABEL } from '../data/types'
-import { cardIdsOf, isBuilt, lessonByDay, outlineByDay, stageOf } from '../data/curriculum'
+import { cardIdsOf, isBuilt, outlineByDay, stageOf, useLesson } from '../data/curriculum'
 import { COVER } from '../data/curriculum/build'
 import { completeLesson, getState, recordQuiz, setNote, todayStr, toggleExplain, toggleTask, useStore } from '../lib/store'
 import { Rich, inline } from '../components/Rich'
@@ -24,7 +24,8 @@ function shuffleIdx(n: number, seed: number) {
 }
 
 export function LessonRoute({ day }: { day: number }) {
-  const lesson = lessonByDay(day)
+  const lesson = useLesson(day)
+  if (lesson === undefined) return <div className="pad"><p className="muted">正在打开这一课…</p></div>
   if (!lesson) return <ComingSoon day={day} />
   return <LessonPlayer key={day} lesson={lesson} />
 }

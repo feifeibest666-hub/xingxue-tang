@@ -1,13 +1,16 @@
 // 内容与天文计算自检：npm run check
 import { readFileSync } from 'node:fs'
 import { OUTLINE, STAGES } from '../src/data/outline'
-import { LESSONS } from '../src/data/curriculum'
-import { WIDGET_NAMES } from '../src/components/widgets'
+import { loadAll, loadAllWidgets } from '../src/data/curriculum'
+import { allWidgetNames } from '../src/components/widgets'
 import { TAGS } from '../src/data/types'
 import { ascensionTime, sunLongitude, ayanamsaAt } from '../src/lib/astro'
 import { element, modality, polarity, signOf } from '../src/data/zodiac'
 import { boundAt, faceAt, dignityOf, detrimentOf, fallOf } from '../src/data/classical'
 
+const LESSONS = await loadAll()
+await loadAllWidgets()
+const WIDGET_NAMES = allWidgetNames()
 let fail = 0
 const err = (m: string) => { fail++; console.error('✗', m) }
 const ok = (m: string) => console.log('✓', m)

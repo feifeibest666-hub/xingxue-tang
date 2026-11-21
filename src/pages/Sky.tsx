@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 import { AXES, ELEMENT_COLOR, ELEMENT_QUAL, SIGNS, TERMS, element, modality, polarity } from '../data/zodiac'
-import { LESSONS } from '../data/curriculum'
+import { useLessons } from '../data/curriculum'
 import { Widget } from '../components/widgets'
 import { Glyph } from '../components/Glyph'
 import { Starfield } from '../components/Starfield'
@@ -63,12 +63,13 @@ export function SkyPage({ tab = 'sim', sign }: { tab?: string; sign?: number }) 
 }
 
 function SignDetail({ i }: { i: number }) {
+  const { lessons, ready } = useLessons()
   const s = SIGNS[i - 1]
   const el = element(i), mo = modality(i), po = polarity(i)
   const axis = AXES.find(([a, b]) => a === i || b === i)!
   const opp = axis[0] === i ? axis[1] : axis[0]
   const termIdx = (i - 1) * 2
-  const related = LESSONS.filter((l) => l.title.includes(s.name)).slice(0, 4)
+  const related = (ready ? lessons : []).filter((l) => l.title.includes(s.name)).slice(0, 4)
   return (
     <div>
       <div className="lesson-head" style={{ marginBottom: 12 }}>
