@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 
+/** 各阶段部件表：Widget 按名字查找 */
+export type WidgetMap = Record<string, (args: Record<string, unknown>) => ReactNode>
+
 export const D2R = Math.PI / 180
 /** 星盘惯例：白羊 0° 在左边，逆时针增加 */
 export const wheel = (cx: number, cy: number, r: number, lon: number) => [cx - r * Math.cos(lon * D2R), cy + r * Math.sin(lon * D2R)] as const

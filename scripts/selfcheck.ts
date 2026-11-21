@@ -30,6 +30,9 @@ for (const l of LESSONS) {
   const where = `第 ${l.day} 天`
   const ol = OUTLINE[l.day - 1]
   if (ol.kind !== l.kind) err(`${where} 类型 ${l.kind} 与课表 ${ol.kind} 不一致`)
+  const bare = (t: string) => t.replace(/（[^）]*）$/, '')
+  if (bare(ol.title) !== bare(l.title)) err(`${where} 标题与课表不一致：${l.title} ≠ ${ol.title}`)
+  if (ol.stage !== l.stage) err(`${where} 阶段 ${l.stage} 与课表 ${ol.stage} 不一致`)
   if (!l.question) err(`${where} 缺"本课问题"`)
   if (!l.qa.length) err(`${where} 没有问答`)
   if (l.kind === 'new') {
@@ -58,7 +61,13 @@ for (const l of LESSONS) {
     if (q.t === 'order' && q.steps.length < 3) err(`${w} 排序步骤太少`)
   })
 }
-ok(`第一阶段 ${LESSONS.length} 课，${LESSONS.reduce((n, l) => n + l.quiz.length, 0)} 道题，${LESSONS.reduce((n, l) => n + l.qa.length, 0)} 条问答`)
+if (new Set(days).size !== days.length) err('有重复的课')
+for (const st of STAGES) {
+  const built = days.filter((d) => d >= st.from && d <= st.to).length
+  if (built && built !== st.to - st.from + 1) err(`阶段 ${st.n} 只写了 ${built}/${st.to - st.from + 1} 课`)
+  if (built && !LESSONS.find((l) => l.day === st.to)?.cert) err(`阶段 ${st.n} 最后一课缺 cert`)
+}
+ok(`已写好 ${LESSONS.length} 课，${LESSONS.reduce((n, l) => n + l.quiz.length, 0)} 道题，${LESSONS.reduce((n, l) => n + l.qa.length, 0)} 条问答`)
 
 // 3. 星座属性公式
 const want = [['阳', '火', '开创'], ['阴', '土', '固定'], ['阳', '风', '变动'], ['阴', '水', '开创']]

@@ -1,9 +1,21 @@
 import type { Lesson } from '../types'
 import { OUTLINE, STAGES, type OutlineLesson } from '../outline'
 import { STAGE01 } from './stage01'
+import { STAGE02 } from './stage02'
+import { STAGE03 } from './stage03'
+import { STAGE04 } from './stage04'
+import { STAGE05 } from './stage05'
+import { STAGE06 } from './stage06'
 
 /** 已经写好完整内容的课 */
-export const LESSONS: Lesson[] = [...STAGE01]
+export const LESSONS: Lesson[] = [
+  ...STAGE01,
+  ...STAGE02,
+  ...STAGE03,
+  ...STAGE04,
+  ...STAGE05,
+  ...STAGE06,
+]
 const byDay = new Map(LESSONS.map((l) => [l.day, l]))
 
 export const lessonByDay = (day: number): Lesson | undefined => byDay.get(day)

@@ -55,7 +55,7 @@ function ComingSoon({ day }: { day: number }) {
         <div className="soon" style={{ marginTop: 4 }}>
           <StarShape size={26} />
           <div className="serif" style={{ fontSize: 17, color: 'var(--ink)', margin: '6px 0 2px' }}>这一课正在制作中</div>
-          目前完整上线的是第 1 阶段（第 1–42 天）。课表和推导目标已经排好，内容会按阶段陆续补上。
+          课表和推导目标已经排好，内容会按阶段陆续补上。已经上线的课可以在「学程」里看到（没有"制作中"标记的阶段）。
         </div>
         <h3 className="section-title">这一课要推出什么</h3>
         <div className="card"><p className="serif" style={{ margin: 0, lineHeight: 1.85 }}>{ol.goal || KIND_GOAL[ol.kind]}</p></div>
@@ -65,7 +65,7 @@ function ComingSoon({ day }: { day: number }) {
           {day > 1 ? <a className="btn" href={`#/lesson/${day - 1}`}>‹ 第 {day - 1} 天</a> : <span />}
           {day < 700 ? <a className="btn" href={`#/lesson/${day + 1}`}>第 {day + 1} 天 ›</a> : <span />}
         </div>
-        <a className="btn primary block" href="#/stage/1">回到第 1 阶段继续学</a>
+        <a className="btn primary block" href="#/today">回到今日一课</a>
       </div>
     </div>
   )
@@ -648,7 +648,7 @@ function Certificate({ stage }: { stage: ReturnType<typeof stageOf> }) {
         <PatternSvg n={stage.n} lit={7} size={110} />
         <div className="eyebrow" style={{ color: 'var(--gold)' }}>星学堂 · 阶段结业</div>
         <h2>第 {stage.n} 阶段 · {stage.name}</h2>
-        <p className="serif" style={{ color: 'rgba(246,241,228,.8)', fontSize: 14.5 }}>你已经能从"地球自转、斜着公转"这一个事实出发，讲清楚黄道、四季、十二宫，以及每个星座的极性、元素和模式，并分清哪些是天文、哪些是约定。</p>
+        <p className="serif" style={{ color: 'rgba(246,241,228,.8)', fontSize: 14.5 }}>你已经能讲清这一阶段的 {stage.canExplain.length} 个要点：{stage.sub}。</p>
         <div className="small" style={{ color: 'var(--gold)', marginTop: 8 }}>{todayStr()} · 第 {stage.from}–{stage.to} 天</div>
       </div>
     </motion.div>

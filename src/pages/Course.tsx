@@ -27,7 +27,7 @@ export function CoursePage() {
                 <span className="sc-n"><PatternSvg n={st.n} lit={done ? Math.max(1, Math.round((done / total) * 7)) : 0} size={40} /></span>
                 <div className="grow">
                   <h3>{st.n}. {st.name}</h3>
-                  <div className="sc-meta">{st.sub} · 第 {st.from}–{st.to} 天 · {done}/{total}{st.n === 1 ? '' : ' · 制作中'}</div>
+                  <div className="sc-meta">{st.sub} · 第 {st.from}–{st.to} 天 · {done}/{total}{isBuilt(st.from) ? '' : ' · 制作中'}</div>
                   <div className="sc-bar"><i style={{ width: `${(done / total) * 100}%` }} /></div>
                 </div>
                 <span className="ll-arrow">›</span>

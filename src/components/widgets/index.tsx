@@ -3,6 +3,20 @@ import { DiurnalWidget, FlashlightWidget, HemiWidget, OrbitWidget, SphereWidget,
 import { CakeWidget, MoonYearWidget, PrecessionWidget, RingWidget, SignsVsConstWidget } from './circle'
 import { CalcWidget, CrossesWidget, DoorWidget, ElementsWidget, GearsWidget, GlyphsWidget, MirrorWidget, SpeedWidget, WebWidget, ZipperWidget } from './signs'
 import { SeasonsWidget, SkySimWidget, SunDateWidget } from './tools'
+import type { WidgetMap } from './common'
+import { W02 } from './stage02'
+import { W03 } from './stage03'
+import { W04 } from './stage04'
+import { W05 } from './stage05'
+import { W06 } from './stage06'
+
+const EXTRA: WidgetMap = {
+  ...W02,
+  ...W03,
+  ...W04,
+  ...W05,
+  ...W06,
+}
 
 /** 课程里的互动屏按名字取部件 */
 export function Widget({ name, args = {} }: { name: string; args?: Record<string, unknown> }): ReactNode {
@@ -33,9 +47,10 @@ export function Widget({ name, args = {} }: { name: string; args?: Record<string
     case 'seasons': return <SeasonsWidget />
     case 'sunDate': return <SunDateWidget mode={(args.mode as 'basic' | 'sidereal' | 'attrs') ?? 'basic'} />
     case 'sim': return <SkySimWidget />
-    default: return <div className="soon">（互动"{name}"还没做好）</div>
+    default: if (EXTRA[name]) return EXTRA[name](args)
+      return <div className="soon">（互动"{name}"还没做好）</div>
   }
 }
 
 export const WIDGET_NAMES = ['sphere', 'diurnal', 'orbit', 'twoCircles', 'tilt', 'flashlight', 'swing', 'hemi', 'ring', 'moonYear', 'cake', 'signsVsConst', 'precession',
-  'zipper', 'elements', 'crosses', 'door', 'gears', 'glyphs', 'web', 'mirror', 'calc', 'speed', 'seasons', 'sunDate', 'sim']
+  'zipper', 'elements', 'crosses', 'door', 'gears', 'glyphs', 'web', 'mirror', 'calc', 'speed', 'seasons', 'sunDate', 'sim', ...Object.keys(EXTRA)]

@@ -32,6 +32,21 @@ export function L(x: Partial1): Lesson {
   return { stage: 1, kind: 'new', cover: COVER[Math.floor((x.day - 1) / 7)], minutes: 20, ...x }
 }
 
+/** 其他阶段的课：LS(2, 'stage02-cover')({ day, title, ... }) */
+export const LS = (stage: number, cover: string | ((day: number) => string)) => (x: Partial1): Lesson =>
+  ({ stage, kind: 'new', cover: typeof cover === 'string' ? cover : cover(x.day), minutes: 20, ...x })
+
+/** 复盘课自动插入本周新课的单选题（插在排序题之后）；cert 课不插 */
+export function withReviewMix(all: Lesson[], per = 1): Lesson[] {
+  for (const l of all) {
+    if (l.kind !== 'review' || l.cert) continue
+    const week = all.filter((x) => x.kind === 'new' && x.day < l.day && x.day >= l.day - 7).map((x) => x.day)
+    const at = l.quiz.findIndex((q) => q.t === 'order') + 1
+    l.quiz.splice(at, 0, ...mixFrom(all, week, per))
+  }
+  return all
+}
+
 /** 复盘课的混合题：从指定几天的单选题里各取若干道 */
 export function mixFrom(lessons: Lesson[], days: number[], per = 1): Quiz[] {
   const out: Quiz[] = []
