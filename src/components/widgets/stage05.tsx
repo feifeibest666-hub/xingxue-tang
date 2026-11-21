@@ -1,4 +1,5 @@
 import type { WidgetMap } from './common'
+import { W05A } from './stage05a'
+import { W05B } from './stage05b'
 
-/** 第 5 阶段的互动部件：名字 → 渲染函数 */
-export const W05: WidgetMap = {}
+export const W05: WidgetMap = { ...W05A, ...W05B }
